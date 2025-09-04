@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habitly - Professional Habit Tracking App Documentation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #3730A3;
+            --secondary: #10B981;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --success: #10B981;
+            --info: #3B82F6;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --white: #FFFFFF;
+            --black: #000000;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --border-radius: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background-color: var(--gray-50);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header Styles */
+        .header {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 4rem 0 6rem;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><circle cx="30" cy="30" r="1"/></g></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            text-align: center;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--white) 0%, rgba(255,255,255,0.8) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .header-subtitle {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-weight: 400;
+        }
+
+        .header-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Navigation Styles */
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+        }
+
+        .nav-list {
+            display: flex;
+            list-style: none;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-item a {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            text-decoration: none;
+            color: var(--gray-600);
+            font-weight: 500;
+            font-size: 0.875rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .nav-item a:hover,
+        .nav-item a.active {
+            background-color: var(--primary);
+            color: var(--white);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Section Styles */
+        .section {
+            background: var(--white);
+            margin: 2rem 0;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-content {
+            padding: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .section-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .section h2 {
+            color: var(--gray-900);
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .section h3 {
+            color: var(--gray-800);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 2.5rem 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section h3::before {
+            content: '';
+            width: 4px;
+            height: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 2px;
+        }
+
+        .section h4 {
+            color: var(--gray-700);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.75rem 0;
+        }
+
+        .section p {
+            color: var(--gray-600);
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+
+        .section ul, .section ol {
+            color: var(--gray-600);
+            margin: 1rem 0 1rem 1.5rem;
+        }
+
+        .section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .section li strong {
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-50) 100%);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .feature-card h4 {
+            color: var(--gray-900);
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--gray-600);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin: 1.5rem 0;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            padding: 0.625rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: default;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: 1.25rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .alert-icon {
+            flex-shrink: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-top: 0.125rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .alert-content ul {
+            margin: 0.5rem 0 0 1rem;
+        }
+
+        .warning {
+            background-color: #FEF3C7;
+            border-color: var(--warning);
+            color: #92400E;
+        }
+
+        .success {
+            background-color: #D1FAE5;
+            border-color: var(--success);
+            color: #065F46;
+        }
+
+        .info {
+            background-color: #DBEAFE;
+            border-color: var(--info);
+            color: #1E40AF;
+        }
+
+        .danger {
+            background-color: #FEE2E2;
+            border-color: var(--danger);
+            color: #991B1B;
+        }
+
+        /* Code Blocks - FIXED */
+        .code-block {
+            background: var(--gray-900);
+            color: #F1F5F9;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            position: relative;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
+        }
+
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            background: none;
+            border: none;
+            overflow: visible;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-block code {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            padding: 0;
+            border: none;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            font-size: 0.875rem;
+        }
+
+        .table th {
+            background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--gray-300);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .table tr:hover {
+            background-color: var(--gray-50);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-800);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--gray-900);
+            color: var(--gray-300);
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-brand {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .section-content {
+                padding: 1.5rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-list {
+                gap: 0.25rem;
+            }
+
+            .nav-item a {
+                padding: 0.625rem 1rem;
+                font-size: 0.8125rem;
+            }
+
+            .header {
+                padding: 3rem 0 4rem;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .tech-stack {
+                gap: 0.5rem;
+            }
+
+            .tech-item {
+                font-size: 0.8125rem;
+                padding: 0.5rem 0.875rem;
+            }
+
+            .table {
+                font-size: 0.8125rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+
+            .nav-list {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-item {
+                width: 100%;
+            }
+
+            .nav-item a {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Loading animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        /* Highlight current section */
+        .section.active {
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header-content">
+            <h1><i class="fas fa-bullseye"></i> Habitly</h1>
+            <p class="header-subtitle">Professional Habit Tracking Application - Complete Documentation</p>
+            <div class="header-stats">
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Kotlin Native</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">2</span>
+                    <span class="stat-label">Platforms</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Features</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<nav class="nav">
+    <div class="container">
+        <div class="nav-container">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#overview"><i class="fas fa-info-circle"></i> Overview</a></li>
+                <li class="nav-item"><a href="#features"><i class="fas fa-star"></i> Features</a></li>
+                <li class="nav-item"><a href="#architecture"><i class="fas fa-sitemap"></i> Architecture</a></li>
+                <li class="nav-item"><a href="#installation"><i class="fas fa-download"></i> Installation</a></li>
+                <li class="nav-item"><a href="#configuration"><i class="fas fa-cog"></i> Configuration</a></li>
+                <li class="nav-item"><a href="#publishing"><i class="fas fa-rocket"></i> Publishing</a></li>
+                <li class="nav-item"><a href="#troubleshooting"><i class="fas fa-wrench"></i> Troubleshooting</a></li>
+                <li class="nav-item"><a href="#customization"><i class="fas fa-palette"></i> Customization</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- Overview Section -->
+    <section id="overview" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <h2>Project Overview</h2>
+            </div>
+
+            <p>Habitly is a premium habit tracking application built with <strong>Kotlin Multiplatform</strong> and <strong>Compose Multiplatform</strong>, designed to run seamlessly on both Android and iOS platforms. This sophisticated app helps users build and maintain positive habits with advanced analytics, beautiful UI, and comprehensive tracking features.</p>
+
+            <div class="alert info">
+                <i class="fas fa-mobile-alt alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Target Platforms:</strong> Android 7.0+ (API 24+) and iOS 14.0+
+                </div>
+            </div>
+
+            <h3><i class="fas fa-gem"></i> Key Highlights</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-rocket"></i> Modern Architecture</h4>
+                    <p>Clean Architecture with MVVM pattern, dependency injection, and reactive programming</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-paint-brush"></i> Premium UI/UX</h4>
+                    <p>Material Design 3, glassmorphism effects, and smooth animations</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-chart-line"></i> Advanced Analytics</h4>
+                    <p>Detailed statistics, heatmaps, streaks, and performance insights</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-dollar-sign"></i> Monetization Ready</h4>
+                    <p>Built-in subscription management and premium features</p>
+                </div>
+            </div>
+
+            <h3><i class="fas fa-code"></i> Technology Stack</h3>
+            <div class="tech-stack">
+                <span class="tech-item">Kotlin Multiplatform</span>
+                <span class="tech-item">Compose Multiplatform</span>
+                <span class="tech-item">SQLDelight</span>
+                <span class="tech-item">DataStore</span>
+                <span class="tech-item">Coroutines</span>
+                <span class="tech-item">Material Design 3</span>
+                <span class="tech-item">Navigation Compose</span>
+                <span class="tech-item">Clean Architecture</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h2>Features Overview</h2>
+            </div>
+
+            <h3><i class="fas fa-bullseye"></i> Core Features</h3>
+            <ul>
+                <li><strong>Habit Management:</strong> Create, edit, delete, and track habits with customizable goals</li>
+                <li><strong>Multiple Habit Types:</strong> Daily single, daily multiple, weekly, and timed habits</li>
+                <li><strong>Smart Categories:</strong> Health, Fitness, Mindfulness, Learning, Productivity, Social, Creative, Finance</li>
+                <li><strong>Visual Progress Tracking:</strong> Progress bars, streaks, and completion rates</li>
+                <li><strong>Flexible Difficulty Levels:</strong> Easy, Medium, and Hard habit classifications</li>
+            </ul>
+
+            <h3><i class="fas fa-chart-bar"></i> Analytics & Statistics</h3>
+            <ul>
+                <li><strong>Comprehensive Dashboard:</strong> Today's progress, weekly overview, and key metrics</li>
+                <li><strong>Advanced Analytics:</strong> Habit performance, category analysis, and trends</li>
+                <li><strong>Streak Tracking:</strong> Current streaks, best streaks, and consistency metrics</li>
+                <li><strong>Heatmap Visualization:</strong> Calendar view showing daily completion rates</li>
+                <li><strong>Time Investment:</strong> Track estimated time spent on habits</li>
+            </ul>
+
+            <h3><i class="fas fa-palette"></i> UI/UX Features</h3>
+            <ul>
+                <li><strong>Material Design 3:</strong> Modern, accessible design system</li>
+                <li><strong>Dark/Light Theme:</strong> System-adaptive theme with user preference</li>
+                <li><strong>Glassmorphism Effects:</strong> Beautiful translucent UI elements</li>
+                <li><strong>Smooth Animations:</strong> 60fps animations and transitions</li>
+                <li><strong>Custom Icons & Colors:</strong> 20+ icons and 20+ color schemes</li>
+            </ul>
+
+            <h3><i class="fas fa-cogs"></i> Advanced Features</h3>
+            <ul>
+                <li><strong>Smart Notifications:</strong> Customizable reminders with multiple styles</li>
+                <li><strong>Data Export:</strong> Backup and export functionality</li>
+                <li><strong>Offline Support:</strong> Full functionality without internet</li>
+                <li><strong>Multi-language Support:</strong> Localization-ready architecture</li>
+                <li><strong>Performance Optimized:</strong> Lazy loading and efficient data handling</li>
+            </ul>
+
+            <h3><i class="fas fa-crown"></i> Premium Features</h3>
+            <div class="alert warning">
+                <i class="fas fa-exclamation-triangle alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Freemium Model:</strong> Free users can track up to 3 habits, premium users get unlimited habits and advanced features.
+                </div>
+            </div>
+            <ul>
+                <li><strong>Unlimited Habits:</strong> Track as many habits as needed</li>
+                <li><strong>Advanced Analytics:</strong> Deep insights and correlations</li>
+                <li><strong>Custom Themes:</strong> Personalized color schemes</li>
+                <li><strong>Smart Reminders:</strong> AI-powered notification timing</li>
+                <li><strong>Priority Support:</strong> Direct developer support</li>
+                <li><strong>Export Features:</strong> CSV, PDF export options</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Architecture Section -->
+    <section id="architecture" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-sitemap"></i>
+                </div>
+                <h2>Architecture Overview</h2>
+            </div>
+
+            <h3><i class="fas fa-layer-group"></i> Clean Architecture Implementation</h3>
+            <p>Habitly follows <strong>Clean Architecture</strong> principles with clear separation of concerns:</p>
+
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>📁 Project Structure:
+├── 📂 core/
+│   ├── 📂 data/           # Data layer (repositories, mappers)
+│   ├── 📂 domain/         # Business logic (use cases, models)
+│   ├── 📂 database/       # SQLDelight database
+│   ├── 📂 prefs/          # DataStore preferences
+│   ├── 📂 ui/            # UI components and theme
+│   └── 📂 navigation/    # Navigation system
+├── 📂 features/          # Feature modules
+│   ├── 📂 home/          # Home screen
+│   ├── 📂 statistics/    # Analytics screen
+│   ├── 📂 settings/      # Settings screen
+│   ├── 📂 addHabit/      # Habit creation
+│   └── 📂 premium/       # Premium features
+└── 📂 di/               # Dependency injection</code></pre>
+            </div>
+
+            <h3>Key Architectural Patterns</h3>
+            <ul>
+                <li><strong>MVVM (Model-View-ViewModel):</strong> Reactive UI with state management</li>
+                <li><strong>Repository Pattern:</strong> Abstract data access layer</li>
+                <li><strong>Use Cases:</strong> Encapsulated business logic</li>
+                <li><strong>Dependency Injection:</strong> Manual DI with singleton pattern</li>
+                <li><strong>Flow-based Architecture:</strong> Reactive data streams</li>
+            </ul>
+
+            <h3>Database Schema</h3>
+            <div class="table-container">
+                <table class="table">
+                    <tr>
+                        <th>Table</th>
+                        <th>Purpose</th>
+                        <th>Key Fields</th>
+                    </tr>
+                    <tr>
+                        <td>EntityHabit</td>
+                        <td>Habit definitions</td>
+                        <td>id, name, category, color, icon, targetCount, difficulty</td>
+                    </tr>
+                    <tr>
+                        <td>EntityHabitDone</td>
+                        <td>Completion history</td>
+                        <td>id, habitId, completedDate, completedAt</td>
+                    </tr>
+                </table>
+            </div>
+
+            <h3>Performance Optimizations</h3>
+            <ul>
+                <li><strong>Optimized Repository:</strong> Single query with grouped data</li>
+                <li><strong>Lazy Loading:</strong> Efficient list rendering</li>
+                <li><strong>State Caching:</strong> Minimal recomposition</li>
+                <li><strong>Background Processing:</strong> Coroutines for heavy operations</li>
+                <li><strong>Memory Management:</strong> Proper lifecycle handling</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="installation" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-download"></i>
+                </div>
+                <h2>Installation & Setup</h2>
+            </div>
+
+            <h3>Prerequisites</h3>
+            <div class="alert warning">
+                <i class="fas fa-exclamation-triangle alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Requirements:</strong>
+                    <ul>
+                        <li>Android Studio Hedgehog (2023.1.1) or newer</li>
+                        <li>JDK 17 or newer</li>
+                        <li>Kotlin 2.2.10</li>
+                        <li>Android SDK 34</li>
+                        <li>Xcode 15+ (for iOS development)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Quick Start</h3>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code># Clone the repository
+git clone [your-repository-url]
+cd habitly
+
+# Open in Android Studio
+# File → Open → Select habitly folder
+
+# Sync Gradle files
+# Click "Sync Now" when prompted
+
+# Run the app
+# Select "composeApp" run configuration
+# Choose Android or iOS simulator</code></pre>
+            </div>
+
+            <h3>Project Setup Steps</h3>
+            <ol>
+                <li><strong>Import Project:</strong> Open Android Studio → Import Project</li>
+                <li><strong>Configure SDK:</strong> Set Android SDK path in local.properties</li>
+                <li><strong>Sync Dependencies:</strong> Let Gradle download all dependencies</li>
+                <li><strong>Configure Signing:</strong> Add your keystore for release builds</li>
+                <li><strong>Test Build:</strong> Run debug build on emulator/device</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- Configuration Section -->
+    <section id="configuration" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <h2>Configuration Guide</h2>
+            </div>
+
+            <h3>Application Configuration</h3>
+
+            <h4>Constants Configuration</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>// composeApp/src/commonMain/kotlin/com/nelu/habitly/config/Constant.kt
+object Constant {
+    const val EMAIL = "your-email@gmail.com"  // Support email
+
+    val subscriptionList = listOf(
+        "your_monthly_premium",    // Monthly subscription ID
+        "your_annual_premium"      // Annual subscription ID
+    )
+}</code></pre>
+            </div>
+
+            <h4>Theme Customization</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>// core/ui/color/Color.kt - Customize your app colors
+val BrandPrimary = Color(0xFFFF6B35)      // Primary brand color
+val BrandSecondary = Color(0xFF10B981)     // Secondary color
+val BrandTertiary = Color(0xFFF59E0B)      // Accent color</code></pre>
+            </div>
+
+            <h3>Billing Configuration</h3>
+            <div class="alert warning">
+                <i class="fas fa-exclamation-triangle alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Important:</strong> You need to implement platform-specific billing managers for Google Play and App Store.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publishing Section -->
+    <section id="publishing" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h2>Publishing Guide</h2>
+            </div>
+
+            <h3>Google Play Store Publishing</h3>
+
+            <h4>Prerequisites</h4>
+            <ul>
+                <li>Google Play Developer Account ($25 one-time fee)</li>
+                <li>Signed APK/AAB file</li>
+                <li>App icons, screenshots, and store listing</li>
+                <li>Privacy Policy URL</li>
+            </ul>
+
+            <h4>Step-by-Step Process</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code># Generate keystore
+keytool -genkey -v -keystore habitly-release.keystore -alias habitly -keyalg RSA -keysize 2048 -validity 25000
+
+# Build release AAB
+./gradlew bundleRelease</code></pre>
+            </div>
+
+            <h3>Marketing Assets</h3>
+            <div class="table-container">
+                <table class="table">
+                    <tr>
+                        <th>Asset</th>
+                        <th>Android Size</th>
+                        <th>iOS Size</th>
+                    </tr>
+                    <tr>
+                        <td>App Icon</td>
+                        <td>512×512px</td>
+                        <td>1024×1024px</td>
+                    </tr>
+                    <tr>
+                        <td>Feature Graphic</td>
+                        <td>1024×500px</td>
+                        <td>N/A</td>
+                    </tr>
+                    <tr>
+                        <td>Screenshots</td>
+                        <td>Multiple sizes</td>
+                        <td>Various device sizes</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Troubleshooting Section -->
+    <section id="troubleshooting" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-wrench"></i>
+                </div>
+                <h2>Troubleshooting Guide</h2>
+            </div>
+
+            <h3>Common Build Issues</h3>
+
+            <h4>Gradle Sync Problems</h4>
+            <div class="alert danger">
+                <i class="fas fa-exclamation-circle alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Issue:</strong> "Failed to sync Gradle project"
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>Solutions:
+1. Clean and rebuild project:
+./gradlew clean
+./gradlew build
+
+2. Invalidate caches:
+File → Invalidate Caches and Restart
+
+3. Check Gradle wrapper version:
+Update gradle/wrapper/gradle-wrapper.properties
+
+4. Verify JDK version (requires JDK 17+)</code></pre>
+            </div>
+
+            <h3>Performance Issues</h3>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>Performance Optimization Checklist:
+□ Use LazyColumn for large lists
+□ Implement proper remember() for expensive calculations
+□ Avoid unnecessary recompositions
+□ Use derivedStateOf for computed states
+□ Optimize database queries
+□ Implement proper loading states</code></pre>
+            </div>
+
+            <h3>Debugging Tips</h3>
+            <div class="alert info">
+                <i class="fas fa-info-circle alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Logging:</strong> Use the errorLog() function throughout the app for debugging. Check logs in Logcat (Android) or Console (iOS).
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customization Section -->
+    <section id="customization" class="section">
+        <div class="section-content">
+            <div class="section-header">
+                <div class="section-icon">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <h2>Customization Guide</h2>
+            </div>
+
+            <h3>Brand Customization</h3>
+
+            <h4>Colors & Branding</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>// core/ui/color/Color.kt
+// Update these values to match your brand:
+
+val BrandPrimary = Color(0xFFYOUR_PRIMARY)
+val BrandSecondary = Color(0xFFYOUR_SECONDARY)
+val BrandTertiary = Color(0xFFYOUR_ACCENT)
+
+// Also update ColorMapper.kt for habit colors:
+enum class ColorMapper(val id: String, val color: Color) {
+    Pink("pink", Color(0xFFYOUR_PINK)),
+    Blue("blue", Color(0xFFYOUR_BLUE)),
+    // ... add your custom colors
+}</code></pre>
+            </div>
+
+            <h4>App Name & Package</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>// Update package name in:
+// 1. build.gradle.kts files
+// 2. All Kotlin files package declarations
+// 3. Android manifest
+
+// Update app name in:
+// androidApp/src/main/res/values/strings.xml
+&lt;string name="app_name"&gt;Your App Name&lt;/string&gt;</code></pre>
+            </div>
+
+            <h3>Feature Customization</h3>
+
+            <h4>Premium Features Configuration</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>// features/premium/model/PremiumData.kt
+val premiumFeatures = listOf(
+    PremiumFeature(
+        "Your Premium Feature",
+        "Description of the feature",
+        Icons.Default.YourIcon,
+        YourColor
+    ),
+    // Add more premium features
+)</code></pre>
+            </div>
+
+            <h3>Monetization Customization</h3>
+
+            <h4>Subscription Plans</h4>
+            <div class="code-block">
+                <div class="copy-btn" onclick="copyCode(this)">Copy</div>
+                <pre><code>// config/Constant.kt
+val subscriptionList = listOf(
+    "your_monthly_subscription_id",
+    "your_annual_subscription_id",
+    "your_lifetime_subscription_id" // Add if needed
+)</code></pre>
+            </div>
+
+            <h3>Localization</h3>
+            <div class="alert info">
+                <i class="fas fa-globe alert-icon"></i>
+                <div class="alert-content">
+                    <strong>Ready for Localization:</strong> The app architecture supports multiple languages. Add string resources for different locales.
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <p><span class="footer-brand">Habitly</span> - Professional Habit Tracking Application</p>
+            <p>Built with Kotlin Multiplatform & Compose Multiplatform</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Copy code functionality - UPDATED
+    function copyCode(button) {
+        const codeBlock = button.parentElement;
+        const codeElement = codeBlock.querySelector('code');
+        const text = codeElement ? codeElement.textContent.trim() : codeBlock.textContent.replace('Copy', '').trim();
+
+        navigator.clipboard.writeText(text).then(() => {
+            button.textContent = 'Copied!';
+            button.style.background = 'rgba(16, 185, 129, 0.2)';
+            setTimeout(() => {
+                button.textContent = 'Copy';
+                button.style.background = 'rgba(255, 255, 255, 0.1)';
+            }, 2000);
+        }).catch(() => {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            button.textContent = 'Copied!';
+            setTimeout(() => button.textContent = 'Copy', 2000);
+        });
+    }
+
+    // Highlight current section in navigation
+    const observerOptions = {
+        root: null,
+        rootMargin: '-20% 0px -70% 0px',
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const id = entry.target.getAttribute('id');
+            const navLink = document.querySelector(`a[href="#${id}"]`);
+
+            if (entry.isIntersecting) {
+                // Remove active class from all nav links
+                document.querySelectorAll('.nav a').forEach(link => {
+                    link.classList.remove('active');
+                });
+
+                // Add active class to current nav link
+                if (navLink) {
+                    navLink.classList.add('active');
+                }
+
+                // Add active class to current section
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                entry.target.classList.add('active');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all sections
+    document.querySelectorAll('.section').forEach(section => {
+        observer.observe(section);
+    });
+
+    // Mobile navigation enhancement
+    function toggleMobileNav() {
+        const navList = document.querySelector('.nav-list');
+        navList.classList.toggle('mobile-active');
+    }
+
+    // Add mobile nav toggle for very small screens
+    if (window.innerWidth <= 480) {
+        const navContainer = document.querySelector('.nav-container');
+        const toggleButton = document.createElement('button');
+        toggleButton.innerHTML = '<i class="fas fa-bars"></i>';
+        toggleButton.className = 'mobile-nav-toggle';
+        toggleButton.style.cssText = `
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            display: none;
+        `;
+
+        navContainer.insertBefore(toggleButton, navContainer.firstChild);
+    }
+
+    // Smooth fade-in animation on scroll
+    const animateOnScroll = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    });
+
+    document.querySelectorAll('.section').forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        animateOnScroll.observe(section);
+    });
+</script>
+</body>
+</html>
